@@ -55,7 +55,7 @@ automato = {
     },
 
     "qDigitosExp": {  # dígitos do expoente
-        "final": True, "tipo": "expoente",
+        "final": True, "tipo": "com expoente",
         "transicoes": {d: "qDigitosExp" for d in "0123456789"},
     },
 
