@@ -1,3 +1,10 @@
+# AFD que reconhece literais numéricos
+# Q       = ESTADOS   (10 estados, incluindo o poço qPoco)
+# Σ       = ALFABETO  (dígitos 0-9, '+', '-', '.', 'e', 'E')
+# δ       = campo "transicoes" de cada estado; transição ausente -> qPoco
+# inicial = INICIAL   ("qInicial")
+# F       = FINAIS    (q0, q1, qDecimal, qDigitosExp)
+
 ALFABETO = set("0123456789+-.eE")
 INICIAL = "qInicial"
 POCO = "qPoco"
@@ -25,7 +32,7 @@ automato = {
                       | {".": "q.", "e": "qE", "E": "qE"},
     },
 
-    "q.": {         # leu o ponto, falta dígito
+    "q.": {         # leu o ponto
         "final": False, "tipo": None,
         "transicoes": {d: "qDecimal" for d in "0123456789"},
     },
@@ -64,3 +71,20 @@ FINAIS = set()
 for nome, dados in automato.items():
     if dados["final"]:
         FINAIS.add(nome)
+
+
+def processar(palavra):
+    atual = INICIAL
+    caminho = [INICIAL]
+
+    for simbolo in palavra:
+        if simbolo in ALFABETO:
+            atual = automato[atual]["transicoes"].get(simbolo, POCO)
+        else:
+            atual = POCO
+        caminho.append(atual)
+    
+    aceita = atual in FINAIS
+    tipo = automato[atual]["tipo"]
+
+    return aceita, tipo, caminho
